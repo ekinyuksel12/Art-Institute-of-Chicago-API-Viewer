@@ -3,18 +3,28 @@ import { Location, NavigateFunction, useLocation, useNavigate } from "react-rout
 
 //Components
 import SearchBar from "./SearchBar";
-import { loadDefaultPage } from "./Content";
+import { Dispatch, SetStateAction } from "react";
+import AppService from "../services/AppService";
+import { useAppData } from "../contexts/AppDataContext";
 
 
 
 
 //Navigates user to home page
-function handleHome(navigate: NavigateFunction, location: Location) {
+function handleHome(navigate: NavigateFunction, location: Location,
+    appService: AppService, setIsLoading: Dispatch<SetStateAction<boolean>>,
+    setLoadedData: Dispatch<SetStateAction<Artworks | undefined>>,) {
     //Check if user is already in the home page. If not navigate them to the home page. If so fetch the default home page feed.
     if (location.pathname !== '/') {
         navigate('/')
     } else {
-        loadDefaultPage()
+        //Getting the application states using the custom context API hook.
+        setIsLoading(true)
+
+        appService.getArtworks().then((res) => {
+            if (res) setLoadedData(res)
+            setIsLoading(false)
+        });
     }
 }
 
@@ -22,6 +32,7 @@ function handleHome(navigate: NavigateFunction, location: Location) {
 
 
 const Header = () => {
+    const { appService, setIsLoading, setLoadedData } = useAppData();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -29,7 +40,7 @@ const Header = () => {
         <div className="z-10 w-screen h-20 md:h-16 border-b-2 fixed flex items-center font-extralight bg-white">
 
             {/* Logo and app name */}
-            <div onClick={() => { handleHome(navigate, location) }}
+            <div onClick={() => { handleHome(navigate, location, appService, setIsLoading, setLoadedData) }}
                 className="cursor-pointer flex items-center">
 
                 {/* Logo */}
@@ -43,7 +54,7 @@ const Header = () => {
 
             {/* Search button and search bar */}
             <button
-                onClick={() => { handleHome(navigate, location) }}
+                onClick={() => { handleHome(navigate, location, appService, setIsLoading, setLoadedData) }}
                 className="text-lg p-0 hover:underline text-gray-500 ml-4 md:ml-4">Home</button>
             <SearchBar />
         </div>

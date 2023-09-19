@@ -1,5 +1,5 @@
 //Modules
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 
 //Context API provider
 import { useAppData } from "../contexts/AppDataContext";
@@ -10,8 +10,8 @@ import { BiSearch } from "react-icons/bi";
 
 
 //This function gets an input element and gets its value and makes ana API call to the server for search results.
-function handleSearch(input: React.RefObject<HTMLInputElement>) {
-    const { setSearchQuery } = useAppData();
+function handleSearch(input: React.RefObject<HTMLInputElement>, 
+        setSearchQuery: Dispatch<SetStateAction<string | undefined>>) {
 
     if (input.current?.classList.contains('hidden')) {
         input.current.classList.remove('hidden')
@@ -33,20 +33,21 @@ function handleSearch(input: React.RefObject<HTMLInputElement>) {
 const SearchBar = () => {
     //Creates a reference for the search bars input element
     const SearchInputElement = useRef<HTMLInputElement>(null);
+    const {setSearchQuery} = useAppData();
 
     return (
         <div className="flex ml-auto mr-2 md:mr-8 rounded-full">
             {/* Input field */}
             <input ref={SearchInputElement} name="search" type="text" placeholder="Search..." autoComplete="off"
                 onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSearch(SearchInputElement);
+                    if (e.key === 'Enter') handleSearch(SearchInputElement, setSearchQuery);
                 }}
                 className="outline-none w-28 md:w-full hidden md:block" />
             
             {/* Search button and its icon */}
             <span>
                 <button className="text-xl p-1"
-                    onClick={() => { handleSearch(SearchInputElement) }}>
+                    onClick={() => { handleSearch(SearchInputElement, setSearchQuery) }}>
 
                     <BiSearch color="gray" />
                 </button>
