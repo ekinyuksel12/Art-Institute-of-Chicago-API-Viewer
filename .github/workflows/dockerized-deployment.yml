@@ -78,8 +78,8 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          sudo docker stop scatman-faruk
-          sudo docker container rm -f scatman-faruk
+          sudo docker stop ${{ vars.DOCKER_CONTAINER_NAME }}
+          sudo docker container rm -f ${{ vars.DOCKER_CONTAINER_NAME }}
           sudo docker rmi -f ${{ vars.DOCKER_IMG_NAME }}:latest
 
 
