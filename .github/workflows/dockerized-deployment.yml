@@ -14,11 +14,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Cache npm dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    
     - name: Build App
       run: |
         npm install
         npm run build
-    
+
     - name: Upload Build as Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -27,8 +35,9 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t ${{ vars.DOCKER_IMG_NAME }} .
-        docker save -o ${{ vars.DOCKER_IMG_NAME }}.tar ${{ vars.DOCKER_IMG_NAME }}
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        docker build -t ${{ vars.DOCKER_IMG_NAME }}:$TIMESTAMP .
+        docker save -o ${{ vars.DOCKER_IMG_NAME }}-$TIMESTAMP.tar ${{ vars.DOCKER_IMG_NAME }}:$TIMESTAMP
 
     - name: Compress Docker Image
       run: |
@@ -80,7 +89,7 @@ jobs:
         script: |
           sudo docker stop ${{ vars.DOCKER_CONTAINER_NAME }}
           sudo docker container rm -f ${{ vars.DOCKER_CONTAINER_NAME }}
-          sudo docker rmi -f ${{ vars.DOCKER_IMG_NAME }}:latest
+          sudo docker system prune -af
 
 
     - name: SSH into Remote Server and Deploy Docker Image
