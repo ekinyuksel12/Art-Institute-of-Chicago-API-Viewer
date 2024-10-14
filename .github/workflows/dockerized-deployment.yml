@@ -37,7 +37,7 @@ jobs:
       run: |
         TIMESTAMP=$(date +%Y%m%d%H%M%S)
         docker build -t ${{ vars.DOCKER_IMG_NAME }}:$TIMESTAMP .
-        docker save -o ${{ vars.DOCKER_IMG_NAME }}-$TIMESTAMP.tar ${{ vars.DOCKER_IMG_NAME }}:$TIMESTAMP
+        docker save -o ${{ vars.DOCKER_IMG_NAME }}.tar ${{ vars.DOCKER_IMG_NAME }}:$TIMESTAMP
 
     - name: Compress Docker Image
       run: |
