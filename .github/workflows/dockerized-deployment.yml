@@ -92,8 +92,20 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd ${{ vars.DOCKER_IMG_PATH }}
+          
+          # Check if 7zr is installed, if not, install it
+          if ! command -v 7zr &> /dev/null; then
+            echo "7zr not found. Installing p7zip-full..."
+            sudo apt update && sudo apt install -y p7zip-full
+          else
+            echo "7zr is already installed."
+          fi
+
+          # Extract the Docker image and deploy it
           7zr x ${{ vars.DOCKER_IMG_NAME }}.7z
           sudo docker load -i ${{ vars.DOCKER_IMG_PATH }}/${{ vars.DOCKER_IMG_NAME }}.tar
           sudo docker run -d -p ${{ vars.PORT }}:80 --name ${{ vars.DOCKER_CONTAINER_NAME }} ${{ vars.DOCKER_IMG_NAME }}:latest
+          
+          # Clean up extracted files
           rm -rf ${{ vars.DOCKER_IMG_PATH }}/${{ vars.DOCKER_IMG_NAME }}.tar
           rm -rf ${{ vars.DOCKER_IMG_PATH }}/${{ vars.DOCKER_IMG_NAME }}.7z
