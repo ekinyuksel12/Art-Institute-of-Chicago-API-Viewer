@@ -12,7 +12,7 @@ const Footer = () => {
             <p className="font-extralight text-sm text-gray-400 ml-1">Powered by React.js</p>
 
             {/* Project programmer */}
-            <p className="ml-auto mr-auto md:mr-0 text-sm text-gray-400 font-extralight">©2023 Toprak Ekin Yüksel</p>
+            <p className="ml-auto mr-auto md:mr-0 text-sm text-gray-400 font-extralight">©2025 Toprak Ekin Yüksel</p>
         </div>
     );
 }
