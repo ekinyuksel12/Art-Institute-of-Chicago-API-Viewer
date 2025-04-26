@@ -57,10 +57,12 @@ Check out the published version of the project [here](https://art.toprakyuksel.f
    yarn preview
    ```
 
-### Deployment
 
 This project includes a GitHub Actions workflow for Dockerized deployment.  
-See [`.github/workflows/dockerized-deployment.yml`](.github/workflows/dockerized-deployment.yml) for details.
+The workflow automates building, packaging, and deploying the application as a Docker container.  
+It consists of three main jobs: **Build**, **Upload**, and **Deploy**.  
+For more details, see the [Dockerized Application Deployment Workflow](.github/workflows/dockerized-deployment.md).
+
 
 ## Project Structure
 
