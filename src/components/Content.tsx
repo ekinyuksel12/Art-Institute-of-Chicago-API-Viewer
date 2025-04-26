@@ -28,8 +28,6 @@ const Content = () => {
     }
     //Fetching in the default artworks on load
     useEffect(() => {
-        console.log(searchQuery);
-        
         if (searchQuery !== undefined && searchQuery !== '') {
             setIsLoading(true)
 
